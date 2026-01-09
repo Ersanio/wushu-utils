@@ -29,7 +29,7 @@ internal class Program
                 case "repack":
                     if (!Directory.Exists(args[1]))
                     {
-                        Console.WriteLine($"Source folder '{args[1]}' does not exist.");
+                        Console.WriteLine($"Source directory '{args[1]}' does not exist.");
                         return;
                     }
                     var repacker = new Repacker(args[1], args[2]);
@@ -56,8 +56,8 @@ internal class Program
     {
         Console.WriteLine("Age of Wushu Package Utility");
         Console.WriteLine("Usage:");
-        Console.WriteLine($"  unpack <source file> <destination folder>  - Unpack a package file into a folder");
-        Console.WriteLine($"  repack <source folder> <destination file>  - Repack a folder into a package file");
-        Console.WriteLine($"  help                                       - Show this help message");
+        Console.WriteLine($"  unpack <source file> <destination directory>  - Unpack a package file into a directory");
+        Console.WriteLine($"  repack <source directory> <destination file>  - Repack a directory into a package file");
+        Console.WriteLine($"  help                                          - Show this help message");
     }
 }
