@@ -1,4 +1,4 @@
-# Wushu Utilities
+# Age of Wushu Utilities
 
 This repository contains various tools related to Age of Wushu.
 

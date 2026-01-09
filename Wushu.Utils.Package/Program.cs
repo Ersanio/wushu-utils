@@ -21,7 +21,7 @@ internal class Program
                     if (!File.Exists(args[1]))
                     {
                         Console.WriteLine($"Source file '{args[0]}' does not exist.");
-                        return;
+                        Environment.Exit(1);
                     }
                     var unpacker = new Unpacker(args[1], args[2]);
                     unpacker.Unpack();
@@ -30,7 +30,7 @@ internal class Program
                     if (!Directory.Exists(args[1]))
                     {
                         Console.WriteLine($"Source directory '{args[1]}' does not exist.");
-                        return;
+                        Environment.Exit(1);
                     }
                     var repacker = new Repacker(args[1], args[2]);
                     repacker.Repack();
