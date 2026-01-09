@@ -1,0 +1,85 @@
+name: Build and Release CLI
+
+on:
+  push:
+    branches:
+      - 'release/*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build solution
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Set tag name
+        id: set_tag
+        run: |
+          TAG_NAME=${GITHUB_REF#refs/heads/release/}  # strip 'release/' prefix
+          echo "tag_name=$TAG_NAME" >> $GITHUB_ENV
+
+      - name: Find and publish CLI projects
+        run: |
+          mkdir -p artifacts
+          find . -name "*.csproj" -print0 | while IFS= read -r -d '' proj; do
+            if grep -q "<OutputType>Exe</OutputType>" "$proj"; then
+              name=$(basename "$proj" .csproj)
+              echo "Publishing CLI project $name"
+
+              # Windows publish
+              WIN_OUTPUT="artifacts/${name}-${{ env.tag_name }}-win-x64"
+              dotnet publish "$proj" -c Release -r win-x64 --self-contained true -o "$WIN_OUTPUT"
+
+              # Linux publish
+              LINUX_OUTPUT="artifacts/${name}-${{ env.tag_name }}-linux-x64"
+              dotnet publish "$proj" -c Release -r linux-x64 --self-contained true -o "$LINUX_OUTPUT"
+            fi
+          done
+
+      - name: Zip executables
+        run: |
+          cd artifacts
+          for dir in *; do
+            zip -r "../$dir.zip" "$dir"
+          done
+          cd ..
+
+      - name: Create tag for release
+        env:
+          REPO: ${{ github.repository }}
+        run: |
+          echo "Creating tag ${{ env.tag_name }}"
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git tag ${{ env.tag_name }}
+          # Push tag using GITHUB_TOKEN for authentication
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$REPO ${{ env.tag_name }}
+
+      - name: Create release with assets
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.tag_name }}
+          name: Release ${{ env.tag_name }}
+          files: "*.zip"
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Clean up artifacts
+        run: rm -rf artifacts *.zip
