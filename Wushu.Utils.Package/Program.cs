@@ -27,6 +27,11 @@ internal class Program
                     unpacker.Unpack();
                     break;
                 case "repack":
+                    if (!Directory.Exists(args[1]))
+                    {
+                        Console.WriteLine($"Source folder '{args[1]}' does not exist.");
+                        return;
+                    }
                     var repacker = new Repacker(args[1], args[2]);
                     repacker.Repack();
                     break;
@@ -40,7 +45,7 @@ internal class Program
         }
         catch
         {
-            Console.WriteLine("An error occurred during the operation.");
+            Console.WriteLine("An error occurred during the operation. The application will now close.");
             Environment.Exit(-1);
         }
 

@@ -37,17 +37,10 @@ namespace Wushu.Utils.Package
                 _ = binaryReader.ReadByte(); // [1 byte] Compression datetime: Second
                 _ = binaryReader.ReadUInt16(); // [2 bytes] Zero bytes
 
-                var fileNameLength = tocEntrySize - 27;
-                fileStream.Seek(tocIndex + 27, SeekOrigin.Begin);
-
-                var fileName = Encoding.GetEncoding(1252).GetString(binaryReader.ReadBytes(fileNameLength)).TrimEnd('\0');
+                var fileName = Encoding.GetEncoding(1252).GetString(binaryReader.ReadBytes(tocEntrySize - 27)).TrimEnd('\0');
                 Console.WriteLine("Extracting: " + fileName);
 
                 fileStream.Seek(compressedFileOffset, SeekOrigin.Begin);
-                if ((int)compressedFileSize > int.MaxValue)
-                {
-                    throw new Exception($"File too large to read: {fileName}");
-                }
                 var compressedFile = binaryReader.ReadBytes((int)compressedFileSize);
 
                 using var input = new MemoryStream(compressedFile);
