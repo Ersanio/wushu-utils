@@ -23,4 +23,4 @@ Caveats:
 
 ### Automation
 
-The application is designed to run in a CI/CD environment. On success, the application exits with the status code `0`. On error, the application exits with the status code `-1`.
+The application is designed to run in a CI/CD environment. On success, the application exits with the exit code `0`. On error, the application exits with the exit code `1`.

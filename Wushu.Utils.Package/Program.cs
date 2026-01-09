@@ -8,7 +8,7 @@ internal class Program
         if (args.Length == 0)
         {
             ShowHelp();
-            Environment.Exit(-1);
+            Environment.Exit(1);
         }
 
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
@@ -46,7 +46,7 @@ internal class Program
         catch
         {
             Console.WriteLine("An error occurred during the operation. The application will now close.");
-            Environment.Exit(-1);
+            Environment.Exit(1);
         }
 
         Environment.Exit(0);
