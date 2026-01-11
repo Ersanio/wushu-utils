@@ -69,7 +69,7 @@ namespace Wushu.Utils.Package
                     CompressedDataOffset = (uint)fs.Position,
                     UncompressedSize = (uint)uncompressedFile.Length,
                     CompressedSize = (uint)compressedFile.Length,
-                    FileName = fileName,
+                    FileName = fileName.Replace(Path.DirectorySeparatorChar, '\\'),
                 });
 
                 fs.Write(compressedFile, 0, compressedFile.Length);
