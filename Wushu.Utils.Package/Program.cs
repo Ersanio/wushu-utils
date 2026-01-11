@@ -43,9 +43,14 @@ internal class Program
                     break;
             }
         }
-        catch
+        catch (Exception ex)
         {
-            Console.WriteLine("An error occurred during the operation. The application will now close.");
+            Console.WriteLine("An error occurred during the operation.");
+            Console.WriteLine("Details:");
+            Console.WriteLine("Parameters: " + string.Join(", ", args));
+            Console.WriteLine($"Message: {ex.Message}");
+            Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+
             Environment.Exit(1);
         }
 
