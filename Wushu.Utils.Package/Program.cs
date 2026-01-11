@@ -11,6 +11,7 @@ internal class Program
             Environment.Exit(1);
         }
 
+
         Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
         try

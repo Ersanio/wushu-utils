@@ -20,6 +20,12 @@ namespace Wushu.Utils.Package
 
         internal void Repack()
         {
+            var directory = Path.GetDirectoryName(destinationFile)!;
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
             using var fs = new FileStream(destinationFile, FileMode.Create, FileAccess.Write);
             using var bw = new BinaryWriter(fs);
 

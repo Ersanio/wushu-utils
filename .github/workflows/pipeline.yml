@@ -74,7 +74,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ env.tag_name }}
-          name: Release ${{ env.tag_name }}
+          name: ${{ env.tag_name }}
           files: "*.zip"
           draft: false
           prerelease: false
