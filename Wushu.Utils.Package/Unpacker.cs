@@ -37,7 +37,7 @@ namespace Wushu.Utils.Package
                 _ = binaryReader.ReadByte(); // [1 byte] Compression datetime: Second
                 _ = binaryReader.ReadUInt16(); // [2 bytes] Zero bytes
 
-                var fileName = Encoding.GetEncoding(1252).GetString(binaryReader.ReadBytes(tocEntrySize - 27)).TrimEnd('\0');
+                var fileName = Encoding.GetEncoding(1252).GetString(binaryReader.ReadBytes(tocEntrySize - 27)).TrimEnd('\0').Replace('\\', Path.DirectorySeparatorChar);
                 Console.WriteLine("Extracting: " + fileName);
 
                 fileStream.Seek(compressedFileOffset, SeekOrigin.Begin);
