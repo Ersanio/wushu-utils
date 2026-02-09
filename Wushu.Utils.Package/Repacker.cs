@@ -32,12 +32,11 @@ namespace Wushu.Utils.Package
             bw.Write([0x50, 0x43, 0x4B, 0x30, 0x0F, 0x00, 0x00, 0x00, 0x00, 0x00]);
 
             var files = Directory.GetFiles(sourceFolder, "*", SearchOption.AllDirectories);
-            var outputFolder = Path.GetFileName(sourceFolder);
 
             bw.Write((uint)files.Length);
 
             var startOfCompressedData = fs.Position + sizeof(uint) + sizeof(byte) + files
-                .Select(f => Path.Combine(outputFolder, Path.GetRelativePath(sourceFolder, f)).Replace(Path.DirectorySeparatorChar, '\\'))
+                .Select(f => Path.GetRelativePath(sourceFolder, f))
                 .Sum(p => TocEntryBaseSize + Cp1252.GetByteCount(p + "\0"));
 
             bw.Write((uint)startOfCompressedData);
@@ -49,7 +48,7 @@ namespace Wushu.Utils.Package
             var tocEntries = new List<TocEntry>();
             foreach (var filePath in files)
             {
-                var fileName = Path.Combine(outputFolder, Path.GetRelativePath(sourceFolder, filePath)).Replace(Path.DirectorySeparatorChar, '\\');
+                var fileName = Path.GetRelativePath(sourceFolder, filePath);
                 var uncompressedFile = File.ReadAllBytes(filePath);
                 Console.WriteLine("Packaging: " + fileName);
 
