@@ -34,13 +34,13 @@ namespace Wushu.Utils.Package
             var files = Directory.GetFiles(sourceFolder, "*", SearchOption.AllDirectories);
 
             bw.Write((uint)files.Length);
-            bw.Write((byte)0x00);
 
-            var startOfCompressedData = fs.Position + 4 + files
+            var startOfCompressedData = fs.Position + sizeof(uint) + sizeof(byte) + files
                 .Select(f => Path.GetRelativePath(sourceFolder, f))
                 .Sum(p => TocEntryBaseSize + Cp1252.GetByteCount(p + "\0"));
 
             bw.Write((uint)startOfCompressedData);
+            bw.Write((byte)0x00);
 
             var tocIndex = fs.Position;
 
